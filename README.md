@@ -8,7 +8,7 @@ Android walking APP ("game"), where a user will walk with his phone and complete
 
 ### Features
 
-1. ctivities with necessary UI / widgets
+1. Activities with necessary UI / widgets
 2. Fragments
 3. GPS / location
 4. SQLite
