@@ -13,6 +13,7 @@ Android walking APP ("game"), where a user will walk with his phone and complete
 3. GPS / location
 4. SQLite
 5. Playing audio
+6. Additional features may be added
 
 ### How to demo
 
@@ -24,6 +25,7 @@ The user will have a local database on his phone (SQLite) that keeps tracks of h
 ..
 ..
 8. More as we think of them
+
 The player can then start today's game or review statistics from home screen.
 The statistics will show personal bests. 
 During a game a player can follow on-screen instructions (timed events, or endurance tests)
