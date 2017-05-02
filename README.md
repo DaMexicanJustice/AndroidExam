@@ -1,5 +1,10 @@
 # AndroidExam
 
+## Members
+
+Patrick Friis de Sousa Johansen,
+Joachim Christensen
+
 ## Synopsis
 
 ### Metaphor
