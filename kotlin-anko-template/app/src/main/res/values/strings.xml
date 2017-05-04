@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Kotlin Anko Template</string>
+    <string name="title_activity_maps">Map</string>
 </resources>
