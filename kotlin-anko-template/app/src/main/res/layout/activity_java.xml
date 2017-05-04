@@ -20,7 +20,7 @@
         android:textSize="24sp" />
 
     <Button
-        android:id="@+id/playBtn"
+        android:id="@+id/backBtn"
         android:text="Toast Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
         android:text="Show Kotlin Activity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/playBtn"
+        android:layout_below="@+id/backBtn"
         android:layout_marginTop="24dp"
         android:layout_centerHorizontal="true"
         android:onClick="showKotlinClicked"

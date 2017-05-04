@@ -18,7 +18,7 @@ public class JavaActivity extends Activity {
         setContentView(R.layout.activity_java);
         message = (TextView)findViewById(R.id.message);
         message.setText("A Java Activity");
-        Button toastButton = (Button)findViewById(R.id.playBtn);
+        Button toastButton = (Button)findViewById(R.id.backBtn);
         toastButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
