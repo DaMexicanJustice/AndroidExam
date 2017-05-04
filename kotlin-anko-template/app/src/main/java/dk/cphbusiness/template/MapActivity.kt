@@ -10,6 +10,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.activity_map.*
 import org.jetbrains.anko.onClick
+import org.jetbrains.anko.toast
 
 class MapActivity : FragmentActivity(), OnMapReadyCallback {
 
@@ -21,6 +22,7 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
         backBtn.onClick { finish() }
+        objBtn.onClick { toast("Coming soon") }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
