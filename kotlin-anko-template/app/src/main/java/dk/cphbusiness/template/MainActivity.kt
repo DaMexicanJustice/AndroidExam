@@ -12,17 +12,11 @@ class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        backBtn.onClick { toast("Toast button clicked") }
-        profileBtn.onClick { testStartActivity() }
+        playBtn.onClick { testStartActivity() }
+        profileBtn.onClick { toast("Coming soon") }
         }
 
     fun testStartActivity() {
         startActivity(intentFor<MapActivity>())
     }
-
-    /*
-    fun showJavaClicked(view: View) {
-        startActivity(Intent(this, JavaActivity::class.java))
-        }
-    */
-    }
+}

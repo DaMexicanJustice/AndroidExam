@@ -23,12 +23,12 @@
         android:layout_width="300dp"
         android:layout_height="250dp"
         android:background="@drawable/walk"
-        android:layout_above="@+id/backBtn"
+        android:layout_above="@+id/playBtn"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="23dp" />
 
     <Button
-        android:id="@+id/backBtn"
+        android:id="@+id/playBtn"
         style="@style/button_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
