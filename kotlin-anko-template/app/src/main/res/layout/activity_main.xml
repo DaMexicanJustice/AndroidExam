@@ -11,43 +11,11 @@
     android:background="@android:color/holo_green_dark"
     tools:context="dk.cphbusiness.template.MainActivity">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/logo"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/imageView" />
-
-    <pl.droidsonroids.gif.GifTextView
-        android:layout_width="300dp"
-        android:layout_height="250dp"
-        android:background="@drawable/walk"
-        android:layout_above="@+id/playBtn"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="23dp" />
-
-    <Button
-        android:id="@+id/playBtn"
-        style="@style/button_text"
+    <FrameLayout
+        android:id="@+id/main_fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/red_button"
-        android:text="Play Game"
-        android:layout_above="@+id/profileBtn"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="21dp" />
+        android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/profileBtn"
-        style="@style/button_text"
-        android:layout_width="match_parent"
-        android:background="@drawable/red_button"
-        android:text="View Profile"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
+    </FrameLayout>
 
 </RelativeLayout>

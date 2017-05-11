@@ -9,21 +9,42 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.activity_map.*
-import kotlinx.android.synthetic.main.obj_fragment.*
 import org.jetbrains.anko.onClick
-import org.jetbrains.anko.toast
 
 class MapActivity : FragmentActivity(), OnMapReadyCallback {
-
+    val objxFragment = ObjFragment(this)
+    val mapFragment = SupportMapFragment()
     private var mMap: GoogleMap? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
-        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
-        objBackBtn.onClick { toast("test") }
-        objBtn.onClick { setContentView(R.layout.obj_fragment) }
+
+        supportFragmentManager
+                .beginTransaction()
+                .add(R.id.map_fragment_container, objxFragment)
+                .add(R.id.map_fragment_container, mapFragment)
+                .hide(objxFragment)
+                .commit()
+
+        objBtn.onClick { showObj() }
+        backBtn.onClick {finish()}
+    }
+
+    fun hideObj() {
+        supportFragmentManager
+                .beginTransaction()
+                .hide(objxFragment)
+                .show(mapFragment)
+                .commit()
+    }
+
+    fun showObj() {
+        supportFragmentManager
+                .beginTransaction()
+                .show(objxFragment)
+                .hide(mapFragment)
+                .commit()
     }
 
     override fun onMapReady(googleMap: GoogleMap) {

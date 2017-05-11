@@ -1,22 +1,50 @@
 package dk.cphbusiness.template
 
-import android.app.Activity
 import android.os.Bundle
-import kotlinx.android.synthetic.main.activity_main.*
+import android.support.v4.app.FragmentActivity
 import org.jetbrains.anko.intentFor
-import org.jetbrains.anko.onClick
-import org.jetbrains.anko.toast
 
-class MainActivity : Activity() {
+class MainActivity : FragmentActivity() {
+
+    val statFragment = StatFragment(this)
+    val mainFragment = MainFragment(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        playBtn.onClick { testStartActivity() }
-        profileBtn.onClick { toast("Coming soon") }
+
+        setupSupportFragment()
+
         }
 
-    fun testStartActivity() {
+    fun startMapActivity() {
         startActivity(intentFor<MapActivity>())
     }
+
+    fun setupSupportFragment() {
+        supportFragmentManager
+                .beginTransaction()
+                .add(R.id.main_fragment_container, statFragment)
+                .add(R.id.main_fragment_container, mainFragment)
+                .hide(statFragment)
+                .show(mainFragment)
+                .commit()
+    }
+
+    fun showStats() {
+        supportFragmentManager
+                .beginTransaction()
+                .hide(mainFragment)
+                .show(statFragment)
+                .commit()
+    }
+
+    fun hideStats() {
+        supportFragmentManager
+                .beginTransaction()
+                .hide(statFragment)
+                .show(mainFragment)
+                .commit()
+    }
+
 }

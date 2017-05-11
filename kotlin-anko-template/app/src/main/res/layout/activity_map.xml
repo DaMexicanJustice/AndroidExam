@@ -3,19 +3,12 @@
     android:layout_height="fill_parent"
     android:background="@android:color/holo_green_dark">
 
-    <fragment android:name="dk.cphbusiness.template.ObjFragment"
-        android:id="@+id/objFragment"
+    <FrameLayout
+        android:id="@+id/map_fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="380dp" />
+        android:layout_height="match_parent">
 
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:map="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="380dp"
-        tools:context="dk.cphbusiness.template.MapFragment" />
+    </FrameLayout>
 
     <Button
         android:id="@+id/backBtn"
