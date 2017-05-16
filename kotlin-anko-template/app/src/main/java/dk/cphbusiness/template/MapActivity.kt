@@ -1,7 +1,11 @@
 package dk.cphbusiness.template
 
+import android.content.Context
+import android.location.LocationListener
+import android.location.LocationManager
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
+import android.util.Log
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -11,15 +15,21 @@ import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.activity_map.*
 import org.jetbrains.anko.onClick
 
+
+
+
 class MapActivity : FragmentActivity(), OnMapReadyCallback {
 
+    private val cat = "MapA"
+
     private var mMap: GoogleMap? = null
+    lateinit private var locationManager : LocationManager
 
     var isShowingObj : Boolean = false
 
     val objxFragment = ObjFragment(this)
+    //val mapFragment = MySupportMapFragment(this)
     val mapFragment = SupportMapFragment()
-    //val mySupMapFragment = MySupportMapFragment(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,13 +44,17 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback {
                 .commit()
 
         objBtn.onClick {
-            if (!isShowingObj) showObj()
-            else hideObj()
+            if (!isShowingObj) showObj(mapFragment)
+            else hideObj(mapFragment)
         }
         endBtn.onClick { finish() }
+
+        mapFragment.getMapAsync(this)
+
+        //locationManager = applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
     }
 
-    fun showMap() {
+    fun showMap(mapFragment : SupportMapFragment) {
         supportFragmentManager
                 .beginTransaction()
                 //.show(mySupMapFragment)
@@ -49,7 +63,7 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback {
                 .commit()
     }
 
-    fun hideMap() {
+    fun hideMap(mapFragment : SupportMapFragment) {
         supportFragmentManager
                 .beginTransaction()
                 //.hide(mySupMapFragment)
@@ -59,7 +73,7 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback {
     }
 
 
-    fun hideObj() {
+    fun hideObj(mapFragment : SupportMapFragment) {
         supportFragmentManager
                 .beginTransaction()
                 .hide(objxFragment)
@@ -69,7 +83,7 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback {
         isShowingObj = false
     }
 
-    fun showObj() {
+    fun showObj(mapFragment : SupportMapFragment) {
         supportFragmentManager
                 .beginTransaction()
                 .show(objxFragment)
@@ -80,14 +94,21 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
-
+        Log.d(cat, "MapReady")
         mMap = googleMap
 
         // Add a marker in Sydney and move the camera
         val sydney = LatLng(-34.0, 151.0)
         mMap!!.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
         mMap!!.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+    }
 
+    fun checkNetwork() : Boolean {
+        return locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+    }
+
+    fun checkGps() : Boolean {
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 
 }

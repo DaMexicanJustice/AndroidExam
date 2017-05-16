@@ -5,8 +5,6 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.obj_fragment.view.*
-import org.jetbrains.anko.onClick
 
 class ObjFragment(val activity: MapActivity) : Fragment() {
     override fun onCreateView(
@@ -20,9 +18,6 @@ class ObjFragment(val activity: MapActivity) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        view.objBackBtn.onClick {
-            activity.hideObj()
-        }
     }
 
 }
