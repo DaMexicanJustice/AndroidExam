@@ -48,6 +48,9 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback, LocationListener, Ac
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
 
+        // TODO: This is how to use my objective class
+        //val testObj = Objective("test", "simply toast this", 0)
+
         supportFragmentManager
                 .beginTransaction()
                 .add(R.id.map_fragment_container, objxFragment)
