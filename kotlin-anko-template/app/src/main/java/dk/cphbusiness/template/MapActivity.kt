@@ -9,19 +9,16 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.FragmentActivity
-import android.util.Log
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import kotlinx.android.synthetic.main.activity_map.*
 import org.jetbrains.anko.onClick
 import org.jetbrains.anko.toast
-
-
-
-
-
-
+import java.util.*
 
 
 class MapActivity : FragmentActivity(), OnMapReadyCallback, LocationListener, ActivityCompat.OnRequestPermissionsResultCallback {
@@ -32,6 +29,9 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback, LocationListener, Ac
     private val LOCATION_PERMISSION_REQUEST_CODE = 1
 
     private var mMap: GoogleMap? = null
+    private var isMapReady : Boolean = false
+    private val userMarkers = ArrayList<Marker>()
+
     lateinit private var locationManager : LocationManager
     private val _minDistance: Float = 2.0f
     private val _minTime: Long = 2L
@@ -66,7 +66,7 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback, LocationListener, Ac
 
         locationManager = applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-        if ( checkLocationPermission() == false ) {
+        if (!checkLocationPermission()) {
             //TODO Dialogue box here explaining why we need permission
             ActivityCompat.requestPermissions(this, arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION), 1)
         }
@@ -74,7 +74,6 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback, LocationListener, Ac
         if ( isNetworkEnabled() ) {
             if ( isGPSEnabled() ) {
                 //TODO write code here
-
 
             } else {
                 toast("GPS${errorMsg}")
@@ -85,11 +84,20 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback, LocationListener, Ac
         }
     }
 
-    fun updateUserLocation() {
+    fun getLastKnownLoc() : LatLng {
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, _minTime, _minDistance, this)
         var location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
         latitude = location.latitude
         longitude = location.longitude
+        return LatLng(latitude, longitude)
+    }
+
+    fun zoomToLoc(pos : LatLng) {
+        if (isMapReady) {
+            mMap!!.moveCamera(CameraUpdateFactory.newLatLng(pos))
+            mMap!!.animateCamera(CameraUpdateFactory.zoomIn());
+            mMap!!.animateCamera(CameraUpdateFactory.zoomTo(15f), 2000, null)
+        }
     }
 
     fun isNetworkEnabled() : Boolean {
@@ -140,13 +148,10 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback, LocationListener, Ac
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
-        Log.d(cat, "MapReady")
         mMap = googleMap
-
-        /* Add a marker in Sydney and move the camera. Test case
-        val sydney = LatLng(-34.0, 151.0)
-        mMap!!.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        mMap!!.moveCamera(CameraUpdateFactory.newLatLng(sydney)) */
+        isMapReady = true
+        mMap!!.isMyLocationEnabled = true
+        zoomToLoc(getLastKnownLoc())
     }
 
     fun checkNetwork() : Boolean {
@@ -158,7 +163,7 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback, LocationListener, Ac
     }
 
     override fun onLocationChanged(p0: Location?) {
-        toast("Am I somewhere else?")
+
     }
 
     override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {
