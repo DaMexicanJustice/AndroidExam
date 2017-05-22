@@ -14,7 +14,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.activity_map.*
 import org.jetbrains.anko.onClick
 import org.jetbrains.anko.toast
@@ -26,11 +26,10 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback, LocationListener, Ac
     private val cat = "MapA"
     private val errorMsg : String = " signal has been lost"
 
-    private val LOCATION_PERMISSION_REQUEST_CODE = 1
+    //private val LOCATION_PERMISSION_REQUEST_CODE = 1
 
     private var mMap: GoogleMap? = null
     private var isMapReady : Boolean = false
-    private val userMarkers = ArrayList<Marker>()
 
     lateinit private var locationManager : LocationManager
     private val _minDistance: Float = 2.0f
@@ -44,12 +43,12 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback, LocationListener, Ac
     //val mapFragment = MySupportMapFragment(this)
     val mapFragment = SupportMapFragment()
 
+    val random = Random()
+    var currentObjective : Any? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
-
-        // TODO: This is how to use my objective class
-        //val testObj = Objective("test", "simply toast this", 0)
 
         supportFragmentManager
                 .beginTransaction()
@@ -79,17 +78,78 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback, LocationListener, Ac
                 //TODO write code here
 
             } else {
-                toast("GPS${errorMsg}")
+                //toast("GPS${errorMsg}")
             }
 
         } else {
-            toast("Internet${errorMsg}")
+            //toast("Internet${errorMsg}")
         }
+
+    }
+
+    fun newEvent() {
+        val r : Int = random.nextInt(2)
+        when (r) {
+            0 -> {
+                // TODO: Generate a random LatLng, create objective
+                val prevLoc =  getLastKnownLoc()
+                val target = calcNewDistance(prevLoc)
+                val objLat = target.latitude
+                val objLong = target.longitude
+                toast("Test toast $objLat, $objLong")
+                currentObjective = newDiscoverObjective(objLat, objLong)
+            }
+            1 -> {
+                // 120 seconds is the time limit
+                currentObjective = newSprintObjective(120)
+            }
+        }
+
+        if (currentObjective != null) {
+            when (currentObjective) {
+                is SprintObjective -> toast("Sprint Event Has Started")
+                is DiscoverObjective -> {
+                    // Smart cast is not possible on mutable type (currentObjective)
+                    val obj = currentObjective as DiscoverObjective
+                    addMarkerToMap(obj.latitude, obj.longitude)
+                }
+            }
+        } else { }
+
+    }
+
+    private fun calcNewDistance(prevLoc : LatLng) : LatLng {
+        // Calculate new LatLng from previous + n meters using radius_earth, pi, 180 degrees
+        val r_earth = 6378
+        // Distance between 500m - 1000m
+        val dx : Int = random.nextInt(501) + 500
+        val dy = random.nextInt(501) + 500
+        val new_latitude  = prevLoc.latitude  + (dy / r_earth) * (180 / Math.PI);
+        val new_longitude = prevLoc.longitude + (dx / r_earth) * (180 / Math.PI) / Math.cos(latitude * Math.PI/180)
+
+        return LatLng(new_latitude, new_longitude)
+    }
+
+    fun newSprintObjective(timeLimit: Int) : SprintObjective {
+        val name = "Sprint"
+        val goal = "Walk as far as possible with the time limit: $timeLimit}"
+        return SprintObjective(timeLimit, name, goal)
+    }
+
+    fun newDiscoverObjective(latitude : Double, longitude : Double) : DiscoverObjective {
+        val name = "Discover"
+        val goal = "Walk to the marker"
+        return DiscoverObjective(latitude, longitude, name, goal)
+    }
+
+    fun addMarkerToMap(latitude: Double, longitude: Double) {
+        mMap!!.addMarker(MarkerOptions().position(LatLng(latitude, longitude)).title("Test Marker"))
+        zoomToLoc(LatLng(latitude,longitude))
     }
 
     fun getLastKnownLoc() : LatLng {
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, _minTime, _minDistance, this)
-        var location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+        val location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
         latitude = location.latitude
         longitude = location.longitude
         return LatLng(latitude, longitude)
@@ -98,7 +158,7 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback, LocationListener, Ac
     fun zoomToLoc(pos : LatLng) {
         if (isMapReady) {
             mMap!!.moveCamera(CameraUpdateFactory.newLatLng(pos))
-            mMap!!.animateCamera(CameraUpdateFactory.zoomIn());
+            mMap!!.animateCamera(CameraUpdateFactory.zoomIn())
             mMap!!.animateCamera(CameraUpdateFactory.zoomTo(15f), 2000, null)
         }
     }
@@ -155,14 +215,16 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback, LocationListener, Ac
         isMapReady = true
         mMap!!.isMyLocationEnabled = true
         zoomToLoc(getLastKnownLoc())
+        // New Objective
+        newEvent()
     }
 
     fun checkNetwork() : Boolean {
-        return locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        return locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
     }
 
     fun checkGps() : Boolean {
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
     }
 
     override fun onLocationChanged(p0: Location?) {
@@ -185,7 +247,7 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback, LocationListener, Ac
         when (requestCode) {
             1 -> {
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                 } else {
                     // permission denied, boo! Disable the
