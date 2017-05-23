@@ -120,6 +120,7 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback, LocationListener, Ac
                     addMarkerToMap(obj.latitude, obj.longitude)
                 }
             }
+            objxFragment.updateObjective()
         } else { }
 
     }
@@ -137,7 +138,7 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback, LocationListener, Ac
 
     fun newSprintObjective(timeLimit: Int) : SprintObjective {
         val name = "Sprint"
-        val goal = "Walk as far as possible with the time limit: $timeLimit}"
+        val goal = "Walk as far as possible!"
         isSprintEvent = true
         timestamp = System.currentTimeMillis() + eventDuraton
         return SprintObjective(timeLimit, name, goal)

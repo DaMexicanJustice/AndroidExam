@@ -5,6 +5,75 @@
     android:background="@android:color/holo_blue_dark">
 
     <TextView
+        android:id="@+id/objName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/eventText"
+        android:layout_alignBottom="@+id/eventText"
+        android:layout_alignEnd="@+id/fragmentTitle"
+        android:layout_alignRight="@+id/fragmentTitle"
+        android:text="#######"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/objGoal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/objLimit"
+        android:layout_alignBottom="@+id/objLimit"
+        android:layout_alignLeft="@+id/objName"
+        android:layout_alignStart="@+id/objName"
+        android:text="#######"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/objLimit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textView12"
+        android:layout_alignBottom="@+id/textView12"
+        android:layout_alignLeft="@+id/objGoal"
+        android:layout_alignStart="@+id/objGoal"
+        android:text="#######"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/objLimit"
+        android:layout_alignStart="@+id/objLimit"
+        android:layout_below="@+id/objLimit"
+        android:layout_marginTop="93dp"
+        android:text="Time Limit"
+        android:textColor="@android:color/white"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/eventText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/fragmentTitle"
+        android:layout_alignStart="@+id/fragmentTitle"
+        android:layout_below="@+id/fragmentTitle"
+        android:layout_marginTop="41dp"
+        android:text="Event"
+        android:textColor="@android:color/white"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/objLimit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/eventText"
+        android:layout_alignStart="@+id/eventText"
+        android:layout_below="@+id/eventText"
+        android:layout_marginTop="79dp"
+        android:text="Goal"
+        android:textColor="@android:color/white"
+        android:textSize="24sp" />
+
+    <TextView
         android:id="@+id/fragmentTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
