@@ -14,6 +14,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.activity_map.*
 import org.jetbrains.anko.onClick
@@ -37,14 +38,20 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback, LocationListener, Ac
     private var longitude : Double = 0.0
     private var latitude : Double = 0.0
 
-    var isShowingObj : Boolean = false
+    private var isShowingObj : Boolean = false
 
-    val objxFragment = ObjFragment(this)
+    private val objxFragment = ObjFragment(this)
     //val mapFragment = MySupportMapFragment(this)
-    val mapFragment = SupportMapFragment()
+    private val mapFragment = SupportMapFragment()
 
-    val random = Random()
+    private val random = Random()
     var currentObjective : Any? = null
+    private var isSprintEvent : Boolean = false
+    private var isDiscoverEvent : Boolean = false
+    private var dMarker : Marker? = null
+
+    private var timestamp : Long = 0
+    private var eventDuraton : Long = 3000
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,7 +103,6 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback, LocationListener, Ac
                 val target = calcNewDistance(prevLoc)
                 val objLat = target.latitude
                 val objLong = target.longitude
-                toast("Test toast $objLat, $objLong")
                 currentObjective = newDiscoverObjective(objLat, objLong)
             }
             1 -> {
@@ -120,30 +126,32 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback, LocationListener, Ac
 
     private fun calcNewDistance(prevLoc : LatLng) : LatLng {
         // Calculate new LatLng from previous + n meters using radius_earth, pi, 180 degrees
+        // Approximately 400 meters away from player
         val r_earth = 6378
-        // Distance between 500m - 1000m
-        val dx : Int = random.nextInt(501) + 500
-        val dy = random.nextInt(501) + 500
-        val new_latitude  = prevLoc.latitude  + (dy / r_earth) * (180 / Math.PI);
+        val dx : Double = (random.nextInt(2) + 1.0) / 4.0
+        val dy : Double = (random.nextInt(2) + 1.0) / 4.0
+        val new_latitude  = prevLoc.latitude  + (dy / r_earth) * (180 / Math.PI)
         val new_longitude = prevLoc.longitude + (dx / r_earth) * (180 / Math.PI) / Math.cos(latitude * Math.PI/180)
-
         return LatLng(new_latitude, new_longitude)
     }
 
     fun newSprintObjective(timeLimit: Int) : SprintObjective {
         val name = "Sprint"
         val goal = "Walk as far as possible with the time limit: $timeLimit}"
+        isSprintEvent = true
+        timestamp = System.currentTimeMillis() + eventDuraton
         return SprintObjective(timeLimit, name, goal)
     }
 
     fun newDiscoverObjective(latitude : Double, longitude : Double) : DiscoverObjective {
         val name = "Discover"
         val goal = "Walk to the marker"
+        isDiscoverEvent = true
         return DiscoverObjective(latitude, longitude, name, goal)
     }
 
     fun addMarkerToMap(latitude: Double, longitude: Double) {
-        mMap!!.addMarker(MarkerOptions().position(LatLng(latitude, longitude)).title("Test Marker"))
+        dMarker = mMap!!.addMarker(MarkerOptions().position(LatLng(latitude, longitude)).title("Test Marker"))
         zoomToLoc(LatLng(latitude,longitude))
     }
 
@@ -215,7 +223,6 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback, LocationListener, Ac
         isMapReady = true
         mMap!!.isMyLocationEnabled = true
         zoomToLoc(getLastKnownLoc())
-        // New Objective
         newEvent()
     }
 
@@ -228,6 +235,36 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback, LocationListener, Ac
     }
 
     override fun onLocationChanged(p0: Location?) {
+        if (isSprintEvent) {
+            toast("Sprint event has started")
+            val startLoc = getLastKnownLoc()
+            if (timestamp <= System.currentTimeMillis())
+                toast("Sprint Event: Time is up")
+                //Do something after 12 seconds (final build: 120 seconds)
+                val endLoc = getLastKnownLoc()
+                val score = FloatArray(1)
+                Location.distanceBetween(startLoc.latitude, startLoc.longitude, endLoc.latitude, endLoc.longitude, score)
+                // TODO: Update profile entity class personal best for distance if the new score is better than the last one
+                isSprintEvent = false
+        } else if (isDiscoverEvent) {
+            if (dMarker != null) {
+                val location = getLastKnownLoc()
+                val loclat = location.latitude
+                val loclong = location.longitude
+                val maplat = dMarker!!.position.latitude
+                val maplong = dMarker!!.position.longitude
+                val dist = FloatArray(1)
+                Location.distanceBetween(loclat, loclong, maplat, maplong, dist)
+                if (dist[0] <= 1.0) {
+                    // TODO: Access user's profile entity class and increment number of discover events completed here
+                    dMarker!!.remove()
+                    isDiscoverEvent = false
+                }
+            }
+        } else {
+            // Might as well do event detection at run-time (location updates)
+            newEvent()
+        }
 
     }
 
