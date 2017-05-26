@@ -8,6 +8,7 @@ class MainActivity : FragmentActivity() {
 
     val statFragment = StatFragment(this)
     val mainFragment = MainFragment(this)
+    //val uc : UserController = UserController()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
