@@ -20,7 +20,7 @@ class DiscoverObjective(val latitude : Double, val longitude : Double, objName :
 
 }
 
-class SprintObjective(val timeLimit : Int, objName : String, objGoal : String, isCompleted : Boolean = false) : Objective(objName, objGoal, isCompleted) {
+class SprintObjective(val timeLimit : Long, objName : String, objGoal : String, isCompleted : Boolean = false) : Objective(objName, objGoal, isCompleted) {
 
     // Constructor
     init {

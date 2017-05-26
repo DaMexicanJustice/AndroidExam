@@ -1,7 +1,10 @@
 package dk.cphbusiness.template
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.FragmentActivity
 import dk.cphbusiness.template.system.SaveLoad
 import dk.cphbusiness.template.user.User
@@ -21,14 +24,25 @@ class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        // Load gets user data, but if that data does not exist, it creates a new
         load()
-        if (user == null) {
-            createNewUser()
-            save(user)
-        }
+        //createNewUser()
+        //save(user)
         setupSupportFragment()
         playStopMusic()
+
+        if (!checkLocationPermission()) {
+            //TODO Dialogue box here explaining why we need permission
+            ActivityCompat.requestPermissions(this, arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION), 1)
+            }
+
         }
+
+    fun checkLocationPermission(): Boolean {
+        val permission = "android.permission.ACCESS_FINE_LOCATION"
+        val res = this.checkCallingOrSelfPermission(permission)
+        return res == PackageManager.PERMISSION_GRANTED
+    }
 
     fun playStopMusic() {
         if (!isPlaying) {

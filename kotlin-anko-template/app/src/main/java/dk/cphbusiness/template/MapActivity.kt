@@ -1,6 +1,5 @@
 package dk.cphbusiness.template
 
-import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
@@ -53,7 +52,7 @@ class MapActivity() : FragmentActivity(), OnMapReadyCallback, LocationListener, 
     private var dMarker : Marker? = null
 
     private var timestamp : Long = 0
-    private var eventDuraton : Long = 3000
+    private var eventDuraton : Long = 120000
 
     private lateinit var origin : LatLng
 
@@ -86,11 +85,6 @@ class MapActivity() : FragmentActivity(), OnMapReadyCallback, LocationListener, 
         mapFragment.getMapAsync(this)
 
         locationManager = applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
-        if (!checkLocationPermission()) {
-            //TODO Dialogue box here explaining why we need permission
-            ActivityCompat.requestPermissions(this, arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION), 1)
-        }
 
         if ( isNetworkEnabled() ) {
             if ( isGPSEnabled() ) {
@@ -137,13 +131,13 @@ class MapActivity() : FragmentActivity(), OnMapReadyCallback, LocationListener, 
             }
             1 -> {
                 // 120 seconds is the time limit
-                currentObjective = newSprintObjective(120)
+                currentObjective = newSprintObjective(120000)
             }
         }
 
         if (currentObjective != null) {
             when (currentObjective) {
-                is SprintObjective -> toast("Sprint Event Has Started")
+                is SprintObjective -> {}
                 is DiscoverObjective -> {
                     // Smart cast is not possible on mutable type (currentObjective)
                     val obj = currentObjective as DiscoverObjective
@@ -166,7 +160,8 @@ class MapActivity() : FragmentActivity(), OnMapReadyCallback, LocationListener, 
         return LatLng(new_latitude, new_longitude)
     }
 
-    fun newSprintObjective(timeLimit: Int) : SprintObjective {
+    fun newSprintObjective(timeLimit: Long) : SprintObjective {
+        toast("Sprint Event Has Started")
         val name = "Sprint"
         val goal = "Walk as far as possible!"
         isSprintEvent = true
@@ -175,6 +170,7 @@ class MapActivity() : FragmentActivity(), OnMapReadyCallback, LocationListener, 
     }
 
     fun newDiscoverObjective(latitude : Double, longitude : Double) : DiscoverObjective {
+        toast("Discover Event Has Started")
         val name = "Discover"
         val goal = "Walk to the marker"
         isDiscoverEvent = true
@@ -268,7 +264,6 @@ class MapActivity() : FragmentActivity(), OnMapReadyCallback, LocationListener, 
 
     override fun onLocationChanged(p0: Location?) {
         if (isSprintEvent) {
-            toast("Sprint event has started")
             val startLoc = getLastKnownLoc()
             if (timestamp <= System.currentTimeMillis())
                 toast("Sprint Event: Time is up")
@@ -276,8 +271,10 @@ class MapActivity() : FragmentActivity(), OnMapReadyCallback, LocationListener, 
                 val endLoc = getLastKnownLoc()
                 val score = FloatArray(1)
                 Location.distanceBetween(startLoc.latitude, startLoc.longitude, endLoc.latitude, endLoc.longitude, score)
-                // TODO: Update profile entity class personal best for distance if the new score is better than the last one
-                bestSprint = score[0]
+                // TODO: Update user entity class personal best for distance if the new score is better than the last one
+                if (score[0] > bestSprint) {
+                    bestSprint = score[0]
+                }
                 isSprintEvent = false
         } else if (isDiscoverEvent) {
             if (dMarker != null) {
@@ -289,7 +286,7 @@ class MapActivity() : FragmentActivity(), OnMapReadyCallback, LocationListener, 
                 val dist = FloatArray(1)
                 Location.distanceBetween(loclat, loclong, maplat, maplong, dist)
                 if (dist[0] <= 1.0) {
-                    // TODO: Access user's profile entity class and increment number of discover events completed here
+                    // TODO: Access user entity class and increment number of discover events completed here
                     toast("Completed a discover event")
                     markersDiscovered++
                     dMarker!!.remove()
@@ -301,10 +298,11 @@ class MapActivity() : FragmentActivity(), OnMapReadyCallback, LocationListener, 
             newEvent()
         }
         // When location changes, update how far we have walked. We use Math.abs to ignore negative/positive number issues
+
         val distanceWalked = FloatArray(1)
         Location.distanceBetween(origin.latitude, origin.longitude, getLastKnownLoc().latitude, getLastKnownLoc().longitude,
                 distanceWalked)
-        metersWalked += Math.abs(distanceWalked[1])
+        //metersWalked += Math.abs(distanceWalked[1])
     }
 
     override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {
@@ -333,11 +331,5 @@ class MapActivity() : FragmentActivity(), OnMapReadyCallback, LocationListener, 
             }
         }// other 'case' lines to check for other
         // permissions this app might request
-    }
-
-    fun checkLocationPermission(): Boolean {
-        val permission = "android.permission.ACCESS_FINE_LOCATION"
-        val res = this.checkCallingOrSelfPermission(permission)
-        return res == PackageManager.PERMISSION_GRANTED
     }
 }

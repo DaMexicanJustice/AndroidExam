@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.obj_fragment.*
+import java.util.concurrent.TimeUnit
 
 class ObjFragment(val activity: MapActivity) : Fragment() {
 
@@ -31,7 +32,7 @@ class ObjFragment(val activity: MapActivity) : Fragment() {
                     val sprint = curObj as SprintObjective
                     objName.text = sprint.objName
                     objGoal.text = sprint.objGoal
-                    objLimit.text = "${sprint.timeLimit}"
+                    objLimit.text = "${TimeUnit.MILLISECONDS.toMinutes(sprint.timeLimit)} minutes"
                 }
                 is DiscoverObjective -> {
                     val discover = curObj as DiscoverObjective
