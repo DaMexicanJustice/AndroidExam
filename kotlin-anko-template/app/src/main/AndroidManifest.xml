@@ -40,13 +40,6 @@
             android:value="@integer/google_play_services_version" />
 
         <activity android:name=".MapActivity" />
-        <activity
-            android:name=".DemoMapActivity"
-            android:label="@string/title_activity_demo_map" />
-        <activity android:name=".ObjActivity" />
-        <activity
-            android:name=".ReferenceMapActivity"
-            android:label="@string/title_activity_reference_map"></activity>
     </application>
 
 </manifest>

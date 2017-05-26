@@ -11,6 +11,7 @@
     android:background="@android:color/holo_green_dark"
     tools:context="dk.cphbusiness.template.MainActivity">
 
+    <!-- DEBUG BUTTONS
     <Button
         android:id="@+id/loadBtn"
         android:layout_width="wrap_content"
@@ -28,6 +29,7 @@
         android:layout_alignLeft="@+id/playBtn"
         android:layout_alignStart="@+id/playBtn"
         android:text="Save" />
+    -->
 
     <ImageView
         android:layout_width="wrap_content"

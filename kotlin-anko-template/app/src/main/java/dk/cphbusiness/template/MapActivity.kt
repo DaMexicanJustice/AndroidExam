@@ -104,12 +104,21 @@ class MapActivity() : FragmentActivity(), OnMapReadyCallback, LocationListener, 
             //toast("Internet${errorMsg}")
         }
 
+        loadUserInfo()
+
+    }
+
+    fun loadUserInfo() {
+        val u = system.load("user", this)
+        metersWalked = u.totalMWalked
+        //markersDiscovered = u.markersDiscovered
+        bestSprint = u.bestSprint
     }
 
     fun endSession() {
-        user.markersDiscovered = markersDiscovered
-        user.bestSprint = bestSprint
-        user.totalMWalked = metersWalked
+        user.markersDiscovered += markersDiscovered
+        if (bestSprint > user.bestSprint) user.bestSprint = bestSprint
+        user.totalMWalked += metersWalked
         system.save("user", user, this)
         finish()
     }
@@ -281,6 +290,7 @@ class MapActivity() : FragmentActivity(), OnMapReadyCallback, LocationListener, 
                 Location.distanceBetween(loclat, loclong, maplat, maplong, dist)
                 if (dist[0] <= 1.0) {
                     // TODO: Access user's profile entity class and increment number of discover events completed here
+                    toast("Completed a discover event")
                     markersDiscovered++
                     dMarker!!.remove()
                     isDiscoverEvent = false

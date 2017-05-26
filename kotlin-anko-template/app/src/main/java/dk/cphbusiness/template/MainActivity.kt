@@ -18,13 +18,26 @@ class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        setupSupportFragment()
-
+        load()
+        if (user == null) {
+            createNewUser()
+            save(user)
         }
+        setupSupportFragment()
+        }
+
+    fun startOver() {
+        createNewUser()
+        save(user)
+    }
+
+    fun createNewUser() {
+        user = User(1,0f,0f,0)
+    }
 
     fun save(u : User) {
         system.save("user", u, this)
+        user = u
     }
 
     fun load () {
@@ -38,7 +51,7 @@ class MainActivity : FragmentActivity() {
     }
 
     fun testSave() {
-        val u = User(1,100f,1000f,5)
+        val u = User(1,1000f,300f,5)
         system.save("user", u, this)
     }
 
@@ -62,6 +75,8 @@ class MainActivity : FragmentActivity() {
                 .hide(mainFragment)
                 .show(statFragment)
                 .commit()
+        load()
+        statFragment.updateStats(statFragment.view)
     }
 
     fun hideStats() {
