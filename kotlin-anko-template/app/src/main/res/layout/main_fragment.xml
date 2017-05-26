@@ -11,6 +11,24 @@
     android:background="@android:color/holo_green_dark"
     tools:context="dk.cphbusiness.template.MainActivity">
 
+    <Button
+        android:id="@+id/loadBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/gifTextView"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:text="Load" />
+
+    <Button
+        android:id="@+id/saveBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/gifTextView"
+        android:layout_alignLeft="@+id/playBtn"
+        android:layout_alignStart="@+id/playBtn"
+        android:text="Save" />
+
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,7 +43,8 @@
         android:background="@drawable/walk"
         android:layout_above="@+id/playBtn"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="23dp" />
+        android:layout_marginBottom="23dp"
+        android:id="@+id/gifTextView" />
 
     <Button
         android:id="@+id/playBtn"

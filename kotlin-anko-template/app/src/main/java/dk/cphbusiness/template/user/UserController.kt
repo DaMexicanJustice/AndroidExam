@@ -1,8 +1,11 @@
 package dk.cphbusiness.template.user
 
+import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import org.jetbrains.anko.db.*
+
+
 
 /**
  * Created by xboxm on 26-05-2017.
@@ -35,7 +38,40 @@ class UserController(var context: Context = App.instance) : ManagedSQLiteOpenHel
         db.close()
     }
 
-    fun addUser(totalMWalked : Int, bestSprint : Int, markersDiscovered : Int) {
+    fun updateMarkersDiscovered(markers : Int) {
+        db = writableDatabase
+
+        val cv = ContentValues()
+        cv.put("markersDiscovered", markers) //These Fields should be your String values of actual column names
+        // Database always only have 1 user, so id is 1
+        db.update("UserTable", cv, "_id=1", null)
+
+        db.close()
+    }
+
+    fun updateBestSprint(sprint : Int) {
+        db = writableDatabase
+
+        val cv = ContentValues()
+        cv.put("bestSprint", sprint) //These Fields should be your String values of actual column names
+        // Database always only have 1 user, so id is 1
+        db.update("UserTable", cv, "_id=1", null)
+
+        db.close()
+    }
+
+    fun updateMWalked(mWalked : Int) {
+        db = writableDatabase
+
+        val cv = ContentValues()
+        cv.put("totalMWalked", mWalked) //These Fields should be your String values of actual column names
+        // Database always only have 1 user, so id is 1
+        db.update("UserTable", cv, "_id=1", null)
+
+        db.close()
+    }
+
+    /*fun addUser(totalMWalked : Int, bestSprint : Int, markersDiscovered : Int) {
 
         db = writableDatabase
 
@@ -47,7 +83,7 @@ class UserController(var context: Context = App.instance) : ManagedSQLiteOpenHel
         )
 
         db.close()
-    }
+    } */
 
     override fun onCreate(p0: SQLiteDatabase?) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

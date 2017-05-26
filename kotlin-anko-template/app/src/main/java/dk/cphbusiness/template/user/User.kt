@@ -9,8 +9,8 @@ import java.io.Serializable
 data class User(
         val userID: Int,
         //var userName: String,
-        var totalMWalked: Int,
-        var bestSprint : Int,
+        var totalMWalked: Float,
+        var bestSprint : Float,
         var markersDiscovered : Int
 ) : Serializable
 

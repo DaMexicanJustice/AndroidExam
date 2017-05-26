@@ -16,13 +16,15 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import dk.cphbusiness.template.system.SaveLoad
+import dk.cphbusiness.template.user.User
 import kotlinx.android.synthetic.main.activity_map.*
 import org.jetbrains.anko.onClick
 import org.jetbrains.anko.toast
 import java.util.*
 
 
-class MapActivity : FragmentActivity(), OnMapReadyCallback, LocationListener, ActivityCompat.OnRequestPermissionsResultCallback {
+class MapActivity() : FragmentActivity(), OnMapReadyCallback, LocationListener, ActivityCompat.OnRequestPermissionsResultCallback {
 
     private val cat = "MapA"
     private val errorMsg : String = " signal has been lost"
@@ -53,6 +55,16 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback, LocationListener, Ac
     private var timestamp : Long = 0
     private var eventDuraton : Long = 3000
 
+    private lateinit var origin : LatLng
+
+    private val system = SaveLoad()
+
+    //TODO: Entity class variables
+    val user : User = User(0,0f,0f,1)
+    var metersWalked = 0f
+    var markersDiscovered = 0
+    var bestSprint = 0f
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
@@ -69,7 +81,7 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback, LocationListener, Ac
             if (!isShowingObj) showObj(mapFragment)
             else hideObj(mapFragment)
         }
-        endBtn.onClick { finish() }
+        endBtn.onClick { endSession() }
 
         mapFragment.getMapAsync(this)
 
@@ -93,6 +105,15 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback, LocationListener, Ac
         }
 
     }
+
+    fun endSession() {
+        user.markersDiscovered = markersDiscovered
+        user.bestSprint = bestSprint
+        user.totalMWalked = metersWalked
+        system.save("user", user, this)
+        finish()
+    }
+
 
     fun newEvent() {
         val r : Int = random.nextInt(2)
@@ -224,6 +245,7 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback, LocationListener, Ac
         isMapReady = true
         mMap!!.isMyLocationEnabled = true
         zoomToLoc(getLastKnownLoc())
+        origin = getLastKnownLoc()
         newEvent()
     }
 
@@ -246,6 +268,7 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback, LocationListener, Ac
                 val score = FloatArray(1)
                 Location.distanceBetween(startLoc.latitude, startLoc.longitude, endLoc.latitude, endLoc.longitude, score)
                 // TODO: Update profile entity class personal best for distance if the new score is better than the last one
+                bestSprint = score[0]
                 isSprintEvent = false
         } else if (isDiscoverEvent) {
             if (dMarker != null) {
@@ -258,6 +281,7 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback, LocationListener, Ac
                 Location.distanceBetween(loclat, loclong, maplat, maplong, dist)
                 if (dist[0] <= 1.0) {
                     // TODO: Access user's profile entity class and increment number of discover events completed here
+                    markersDiscovered++
                     dMarker!!.remove()
                     isDiscoverEvent = false
                 }
@@ -266,7 +290,11 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback, LocationListener, Ac
             // Might as well do event detection at run-time (location updates)
             newEvent()
         }
-
+        // When location changes, update how far we have walked. We use Math.abs to ignore negative/positive number issues
+        val distanceWalked = FloatArray(1)
+        Location.distanceBetween(origin.latitude, origin.longitude, getLastKnownLoc().latitude, getLastKnownLoc().longitude,
+                distanceWalked)
+        metersWalked += Math.abs(distanceWalked[1])
     }
 
     override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {
