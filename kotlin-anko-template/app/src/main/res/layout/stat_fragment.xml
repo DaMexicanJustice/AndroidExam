@@ -9,12 +9,10 @@
         android:id="@+id/fragmentTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/statBackBtn"
+        android:src="@drawable/android_logo_stats"
         android:layout_alignParentTop="true"
         android:layout_alignRight="@+id/statBackBtn"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
-        android:src="@drawable/android_logo_stats" />
+        android:layout_alignEnd="@+id/statBackBtn" />
 
     <TextView
         android:id="@+id/fragmentTitle_old"
@@ -40,7 +38,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/fragmentTitle"
-        android:layout_above="@+id/statBackBtn">
+        android:layout_above="@+id/statBackBtn"
+        android:layout_alignRight="@+id/fragmentTitle"
+        android:layout_alignEnd="@+id/fragmentTitle">
 
         <TableRow
             android:layout_width="match_parent"
@@ -50,19 +50,19 @@
                 android:id="@+id/description1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
+                android:padding="0dp"
                 android:text="Total Walked"
                 android:textColor="@android:color/white"
-                android:textSize="24sp" />
+                android:textSize="23sp" />
 
             <TextView
                 android:id="@+id/description2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
+                android:padding="0dp"
                 android:text="Best Sprint"
                 android:textColor="@android:color/white"
-                android:textSize="24sp" />
+                android:textSize="23sp" />
         </TableRow>
 
         <TableRow
@@ -96,10 +96,10 @@
                 android:id="@+id/description3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
+                android:padding="0dp"
                 android:text="Markers Discovered"
                 android:textColor="@android:color/white"
-                android:textSize="24sp" />
+                android:textSize="23sp" />
         </TableRow>
 
         <TableRow

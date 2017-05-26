@@ -27,6 +27,7 @@ class MainFragment(val activity: MainActivity) : Fragment() {
             activity.startMapActivity()
         }
         view.profileBtn.onClick { activity.showStats() }
+        view.musicBtn.onClick { activity.playStopMusic() }
         //view.saveBtn.onClick {activity.testSave()}
         //view.loadBtn.onClick {activity.testLoad()}
     }

@@ -1,5 +1,6 @@
 package dk.cphbusiness.template
 
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import dk.cphbusiness.template.system.SaveLoad
@@ -14,6 +15,8 @@ class MainActivity : FragmentActivity() {
     //val uc : UserController = UserController()
     lateinit var user : User
     val system = SaveLoad()
+    lateinit var mediaPlayer : MediaPlayer
+    var isPlaying : Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +27,18 @@ class MainActivity : FragmentActivity() {
             save(user)
         }
         setupSupportFragment()
+        playStopMusic()
         }
+
+    fun playStopMusic() {
+        if (!isPlaying) {
+            mediaPlayer = MediaPlayer.create(this, R.raw.sunsetbridge)
+            mediaPlayer.start()
+        } else {
+            mediaPlayer.stop()
+        }
+        isPlaying = !isPlaying
+    }
 
     fun startOver() {
         createNewUser()
