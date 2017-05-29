@@ -38,6 +38,12 @@ class MainActivity : FragmentActivity() {
 
         }
 
+    // Stop the music if doing something else on the phone
+    override fun onPause() {
+        super.onPause()
+        playStopMusic()
+    }
+
     fun checkLocationPermission(): Boolean {
         val permission = "android.permission.ACCESS_FINE_LOCATION"
         val res = this.checkCallingOrSelfPermission(permission)

@@ -102,6 +102,22 @@ class MapActivity() : FragmentActivity(), OnMapReadyCallback, LocationListener, 
 
     }
 
+    // Override these methods to handle saving of play session data to prevent loss of data
+    override fun onPause() {
+        super.onPause()
+        endSession()
+    }
+    // Override these methods to handle saving of play session data to prevent loss of data
+    override fun onDestroy() {
+        super.onDestroy()
+        endSession()
+    }
+    // Override these methods to handle saving of play session data to prevent loss of data
+    override fun onStop() {
+        super.onStop()
+        endSession()
+    }
+
     fun loadUserInfo() {
         val u = system.load("user", this)
         metersWalked = u.totalMWalked
