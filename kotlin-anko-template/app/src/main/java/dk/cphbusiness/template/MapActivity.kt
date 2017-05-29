@@ -18,9 +18,12 @@ import com.google.android.gms.maps.model.MarkerOptions
 import dk.cphbusiness.template.system.SaveLoad
 import dk.cphbusiness.template.user.User
 import kotlinx.android.synthetic.main.activity_map.*
+import org.jetbrains.anko.longToast
 import org.jetbrains.anko.onClick
 import org.jetbrains.anko.toast
 import java.util.*
+
+
 
 
 class MapActivity() : FragmentActivity(), OnMapReadyCallback, LocationListener, ActivityCompat.OnRequestPermissionsResultCallback {
@@ -86,16 +89,19 @@ class MapActivity() : FragmentActivity(), OnMapReadyCallback, LocationListener, 
 
         locationManager = applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
+        // Do we have Internet and GPS signal?
         if ( isNetworkEnabled() ) {
             if ( isGPSEnabled() ) {
                 //TODO write code here
-
+                newEvent()
             } else {
-                //toast("GPS${errorMsg}")
+                longToast("GPS${errorMsg}, cannot start session")
+                finish()
             }
 
         } else {
-            //toast("Internet${errorMsg}")
+            longToast("Internet${errorMsg}, cannot start session")
+            finish()
         }
 
         loadUserInfo()

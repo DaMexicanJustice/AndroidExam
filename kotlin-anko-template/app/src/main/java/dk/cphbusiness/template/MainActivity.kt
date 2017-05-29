@@ -29,7 +29,6 @@ class MainActivity : FragmentActivity() {
         //createNewUser()
         //save(user)
         setupSupportFragment()
-        playStopMusic()
 
         if (!checkLocationPermission()) {
             //TODO Dialogue box here explaining why we need permission
@@ -41,6 +40,11 @@ class MainActivity : FragmentActivity() {
     // Stop the music if doing something else on the phone
     override fun onPause() {
         super.onPause()
+        playStopMusic()
+    }
+
+    override fun onResume() {
+        super.onResume()
         playStopMusic()
     }
 
