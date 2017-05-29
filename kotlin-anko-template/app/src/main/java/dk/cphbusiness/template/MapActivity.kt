@@ -92,8 +92,8 @@ class MapActivity() : FragmentActivity(), OnMapReadyCallback, LocationListener, 
         // Do we have Internet and GPS signal?
         if ( isNetworkEnabled() ) {
             if ( isGPSEnabled() ) {
-                //TODO write code here
-                newEvent()
+
+
             } else {
                 longToast("GPS${errorMsg}, cannot start session")
                 finish()
@@ -175,8 +175,8 @@ class MapActivity() : FragmentActivity(), OnMapReadyCallback, LocationListener, 
         // Calculate new LatLng from previous + n meters using radius_earth, pi, 180 degrees
         // Approximately 400 meters away from player
         val r_earth = 6378
-        val dx : Double = (random.nextInt(2) + 1.0) / 4.0
-        val dy : Double = (random.nextInt(2) + 1.0) / 4.0
+        val dx : Double = (random.nextInt(2) + 1.0) / 6.0
+        val dy : Double = (random.nextInt(2) + 1.0) / 6.0
         val new_latitude  = prevLoc.latitude  + (dy / r_earth) * (180 / Math.PI)
         val new_longitude = prevLoc.longitude + (dx / r_earth) * (180 / Math.PI) / Math.cos(latitude * Math.PI/180)
         return LatLng(new_latitude, new_longitude)
@@ -324,7 +324,8 @@ class MapActivity() : FragmentActivity(), OnMapReadyCallback, LocationListener, 
         val distanceWalked = FloatArray(1)
         Location.distanceBetween(origin.latitude, origin.longitude, getLastKnownLoc().latitude, getLastKnownLoc().longitude,
                 distanceWalked)
-        //metersWalked += Math.abs(distanceWalked[1])
+        metersWalked += Math.abs(distanceWalked[0])
+        //metersWalked += distanceWalked[0]
     }
 
     override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {
